@@ -27,6 +27,7 @@ void parse_gt(char *filename, char *dest);
 void parse_label(char *filename, Token *label, char *dest);
 void parse_goto(char *filename, Token *label, char *dest);
 void parse_ifgoto(char *filename, Token *label, char *dest);
+void parse_load_data(char *filename, Token *segment, Token *address, char *dest);
 void get_next_label_name(char *filename, char *dest);
 
 int main(int argc, char *argv[]) {
@@ -279,7 +280,14 @@ void parse_instruction(Token *instruction[], char *filename, FILE *output) {
 
 // Append assembly code for an "add" instruction into dest.
 void parse_add(char *dest) {
-    strcat(dest, "// add\n"); // TODO: Add Hack assembly here!
+    strcat(dest, "// add\n"
+                 "@SP\n"
+                 "M=M-1\n"
+                 "A=M\n"
+                 "D=M\n"
+                 "@SP\n"
+                 "A=M-1\n"
+                 "M=M+D\n");
 }
 
 // Append assembly code for the instruction "push [segment] [address]" into dest.
@@ -289,35 +297,24 @@ void parse_push(char *filename, Token *segment, Token *address, char *dest) {
         exit(EXIT_FAILURE);
     }
 
-    char code[500];
-
-    switch (segment->value.key_val) {
-        case CONSTANT:
-            sprintf(code, "// push constant\n"); // TODO: Add Hack assembly here!
-            break;
-        case LOCAL:
-            sprintf(code, "// push local\n"); // TODO: Add Hack assembly here!
-            break;
-        case ARGUMENT:
-            sprintf(code, "// push argument\n"); // TODO: Add Hack assembly here!
-            break;
-        case THIS:
-            sprintf(code, "// push this\n"); // TODO: Add Hack assembly here!
-            break;
-        case THAT:
-            sprintf(code, "// push that\n"); // TODO: Add Hack assembly here!
-            break;
-        case TEMP:
-            sprintf(code, "// push temp\n"); // TODO: Add Hack assembly here!
-            break;
-        case POINTER:
-            sprintf(code, "// push pointer\n"); // TODO: Add Hack assembly here!
-            break;
-        case STATIC:
-            sprintf(code, "// push static\n"); // TODO: Add Hack assembly here!
-            break;
+    if (segment->value.key_val == CONSTANT) {
+        char code[500] = "\0";
+        sprintf(code, "// push\n"
+                      "@%d\n"
+                      "D=A\n"
+                      "@SP\n"
+                      "M=M+1\n"
+                      "A=M-1\n"
+                      "M=D\n", address->value.int_val);
+        strcat(dest, code);
+    } else {
+        parse_load_data(filename, segment, address, dest);
+        strcat(dest, "D=M\n"
+                     "@SP\n"
+                     "M=M+1\n"
+                     "A=M-1\n"
+                     "M=D\n");
     }
-    strcat(dest, code);
 }
 
 // Append assembly code for the instruction "pop [segment] [address]" into dest.
@@ -326,61 +323,71 @@ void parse_pop(char *filename, Token *segment, Token *address, char *dest) {
         printf("Malformed instruction!");
         exit(EXIT_FAILURE);
     }
-
-    char code[500];
-    
-    switch (segment->value.key_val) {
-        case CONSTANT:
-            sprintf(code, "// pop constant\n"); // TODO: Add Hack assembly here!
-            break;
-        case LOCAL:
-            sprintf(code, "// pop local\n"); // TODO: Add Hack assembly here!
-            break;
-        case ARGUMENT:
-            sprintf(code, "// pop argument\n"); // TODO: Add Hack assembly here!
-            break;
-        case THIS:
-            sprintf(code, "// pop this\n"); // TODO: Add Hack assembly here!
-            break;
-        case THAT:
-            sprintf(code, "// pop that\n"); // TODO: Add Hack assembly here!
-            break;
-        case TEMP:
-            sprintf(code, "// pop temp\n"); // TODO: Add Hack assembly here!
-            break;
-        case POINTER:
-            sprintf(code, "// pop pointer\n"); // TODO: Add Hack assembly here!
-            break;
-        case STATIC:
-            sprintf(code, "// pop static\n"); // TODO: Add Hack assembly here!
-            break;
-    }
-    strcat(dest, code);
+    parse_load_data(filename, segment, address, dest);
+    strcat(dest, "D=A\n"
+                 "@R13\n"
+                 "M=D\n" // Now R13 contains the address we want to pop into
+                 "@SP\n"
+                 "M=M-1\n"
+                 "A=M\n"
+                 "D=M\n" // Now we have decremented SP and stored the value we want to pop in D
+                 "@R13\n"
+                 "A=M\n"
+                 "M=D\n");
 }
 
 // Append assembly code for the instruction "sub" into dest.
 void parse_sub(char *dest) {
-    strcat(dest, "// sub\n"); // TODO: Add Hack assembly here!
+    strcat(dest, "// sub\n"
+                 "@SP\n"
+                 "M=M-1\n"
+                 "A=M\n"
+                 "D=M\n"
+                 "@SP\n"
+                 "A=M-1\n"
+                 "M=M-D\n");
 }
 
 // Append assembly code for the instruction "neg" into dest.
 void parse_neg(char *dest) {
-    strcat(dest, "// neg\n"); // TODO: Add Hack assembly here!
+    strcat(dest, "// neg\n"
+                 "@SP\n"
+                 "A=M-1\n"
+                 "D=-M\n"
+                 "M=D\n");
 }
 
 // Append assembly code for the instruction "and" into dest.
 void parse_and(char *dest) {
-    strcat(dest, "// and\n"); // TODO: Add Hack assembly here!
+    strcat(dest, "// and\n"
+                 "@SP\n"
+                 "M=M-1\n"
+                 "A=M\n"
+                 "D=M\n"
+                 "@SP\n"
+                 "A=M-1\n"
+                 "M=M&D\n");
 }
 
 // Append assembly code for the instruction "or" into dest.
 void parse_or(char *dest) {
-    strcat(dest, "// or\n"); // TODO: Add Hack assembly here!
+    strcat(dest, "// or\n"
+                 "@SP\n"
+                 "M=M-1\n"
+                 "A=M\n"
+                 "D=M\n"
+                 "@SP\n"
+                 "A=M-1\n"
+                 "M=M|D\n");
 }
 
 // Append assembly code for the instruction "not" into dest.
 void parse_not(char *dest) {
-    strcat(dest, "// not\n"); // TODO: Add Hack assembly here!
+    strcat(dest, "// not\n"
+                 "@SP\n"
+                 "A=M-1\n"
+                 "D=!M\n"
+                 "M=D\n");
 }
 
 // Append assembly code for the instruction "eq" into dest.
@@ -390,8 +397,27 @@ void parse_eq(char *filename, char *dest) {
     char new_label2[MAX_LINE_LENGTH] = "";
     get_next_label_name(filename, new_label2);
 
-    char code[1000];
-    sprintf(code, "// eq\n"); // TODO: Add Hack assembly here!
+    char code[200];
+    sprintf(code, "// eq\n"
+                  "@SP\n"
+                  "M=M-1\n"
+                  "A=M\n"
+                  "D=M\n"
+                  "@SP\n"
+                  "A=M-1\n"
+                  "D=D-M\n" // D now contains RAM[SP-1] - RAM[SP-2], and SP has been decremented
+                  "@%s\n"
+                  "D;JEQ\n"
+                  "@SP\n" // If we are here then RAM[SP-2] != RAM[SP-1], so write 0x0000 to RAM[SP-2]
+                  "A=M-1\n"
+                  "M=0\n"
+                  "@%s\n"
+                  "0;JMP\n"
+                  "(%s)\n"
+                  "@SP\n"
+                  "A=M-1\n"
+                  "M=-1\n" // If we are here then RAM[SP-2] == RAM[SP-1], so write 0xFFFF to RAM[SP-2]
+                  "(%s)\n", new_label1, new_label2, new_label1, new_label2);
     strcat(dest, code);
 }
 
@@ -402,8 +428,27 @@ void parse_lt(char *filename, char *dest) {
     char new_label2[MAX_LINE_LENGTH] = "";
     get_next_label_name(filename, new_label2);
 
-    char code[1000];
-    sprintf(code, ""); // TODO: Add Hack assembly here!
+    char code[200];
+    sprintf(code, "// lt\n"
+                  "@SP\n"
+                  "M=M-1\n"
+                  "A=M\n"
+                  "D=M\n"
+                  "@SP\n"
+                  "A=M-1\n"
+                  "D=D-M\n" // D now contains RAM[SP-1] - RAM[SP-2], and SP has been decremented
+                  "@%s\n"
+                  "D;JGT\n"
+                  "@SP\n" // If we are here then RAM[SP-2] >= RAM[SP-1], so write 0x0000 to RAM[SP-2]
+                  "A=M-1\n"
+                  "M=0\n"
+                  "@%s\n"
+                  "0;JMP\n"
+                  "(%s)\n"
+                  "@SP\n"
+                  "A=M-1\n"
+                  "M=-1\n" // If we are here then RAM[SP-2] < RAM[SP-1], so write 0xFFFF to RAM[SP-2]
+                  "(%s)\n", new_label1, new_label2, new_label1, new_label2);
     strcat(dest, code);
 }
 
@@ -414,30 +459,108 @@ void parse_gt(char *filename, char *dest) {
     char new_label2[MAX_LINE_LENGTH] = "";
     get_next_label_name(filename, new_label2);
 
-    char code[1000];
-    sprintf(code, ""); // TODO: Add Hack assembly here!
+    char code[200];
+    sprintf(code, "// gt\n"
+                  "@SP\n"
+                  "M=M-1\n"
+                  "A=M\n"
+                  "D=M\n"
+                  "@SP\n"
+                  "A=M-1\n"
+                  "D=D-M\n" // D now contains RAM[SP-1] - RAM[SP-2], and SP has been decremented
+                  "@%s\n"
+                  "D;JLT\n"
+                  "@SP\n" // If we are here then RAM[SP-2] <= RAM[SP-1], so write 0x0000 to RAM[SP-2]
+                  "A=M-1\n"
+                  "M=0\n"
+                  "@%s\n"
+                  "0;JMP\n"
+                  "(%s)\n"
+                  "@SP\n"
+                  "A=M-1\n"
+                  "M=-1\n" // If we are here then RAM[SP-2] > RAM[SP-1], so write 0xFFFF to RAM[SP-2]
+                  "(%s)\n", new_label1, new_label2, new_label1, new_label2);
     strcat(dest, code);
 }
 
 // Append assembly code for the instruction "label [label]" into dest.
 void parse_label(char *filename, Token *label, char *dest) {
-    char code[1000] = "";
-    sprintf(code, "// Label\n"); // TODO: Add Hack assembly here!
+    char code[200] = "";
+    sprintf(code, "// Label\n(manual$%s$%s)\n", filename, label->value.str_val);
     strcat(dest, code);
 }
 
 // Append assembly code for the instruction "goto [label]" into dest.
 void parse_goto(char *filename, Token *label, char *dest) {
-    char code[1000] = "";
-    sprintf(code, "// Goto\n"); // TODO: Add Hack assembly here!
+    char code[200] = "";
+    sprintf(code, "// Goto\n@manual$%s$%s\n"
+                  "0;JMP\n", filename, label->value.str_val);
     strcat(dest, code);
 }
 
 // Append assembly code for the instruction "if-goto [label]" into dest.
 void parse_ifgoto(char *filename, Token *label, char *dest) {
-    char code[1000] = "";
-    sprintf(code, "// If-goto\n"); // TODO: Add Hack assembly here!
+    char code[200] = "";
+    sprintf(code, "// If-goto\n@SP\n"
+                  "M=M-1\n"
+                  "A=M\n"
+                  "D=M\n"
+                  "@manual$%s$%s\n"
+                  "D;JNE\n", filename, label->value.str_val);
     strcat(dest, code);
+}
+
+// Append assembly code to dest which loads the RAM address pointed to by [segment] [address] into A, where [segment]
+// cannot be the keyword "constant".
+void parse_load_data(char *filename, Token *segment, Token *address, char *dest) {
+    char code[200] = "";
+
+    switch (segment->value.key_val) {
+        case LOCAL:
+            sprintf(code, "@%d\n"
+                          "D=A\n"
+                          "@LCL\n"
+                          "A=M+D\n", address->value.int_val);
+            break;
+        case ARGUMENT:
+            sprintf(code, "@%d\n"
+                          "D=A\n"
+                          "@ARG\n"
+                          "A=M+D\n", address->value.int_val);
+            break;
+        case THIS:
+            sprintf(code, "@%d\n"
+                          "D=A\n"
+                          "@THIS\n"
+                          "A=M+D\n", address->value.int_val);
+            break;
+        case THAT:
+            sprintf(code, "@%d\n"
+                          "D=A\n"
+                          "@THAT\n"
+                          "A=M+D\n", address->value.int_val);
+            break;
+        case POINTER:
+            if (address->value.int_val == 0) {
+                strcat(code, "@THIS\n");
+            } else {
+                strcat(code, "@THAT\n");
+            }
+            break;
+        case TEMP:
+            sprintf(code,"@R%d\n", 5 + address->value.int_val);
+            break;
+        case STATIC:
+            sprintf(code,"@%s.%d\n", filename, address->value.int_val);
+            break;
+        case CONSTANT:
+            printf("Error: CONSTANT passed to parse_load_data.");
+            exit(EXIT_FAILURE);
+        default:
+            printf("Malformed instruction!");
+            exit(EXIT_FAILURE);
+    }
+    strcat(dest,code);
 }
 
 // Returns a label name of the form auto$[filename]$[number], where [number] is unique to the file.
