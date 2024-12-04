@@ -280,7 +280,7 @@ void parse_instruction(Token *instruction[], char *filename, FILE *output) {
 
 // Append assembly code for an "add" instruction into dest.
 void parse_add(char *dest) {
-    strcat(dest, "// add\n"
+    strcat(dest, "// add\n"git@github.com:chiderlin/a_hack_assembler.git
                  "@SP\n"
                  "M=M-1\n"
                  "A=M\n"
