@@ -200,12 +200,14 @@ int lex_token(Token *dest, const char *line) {
 void parse_file(char *filename, FILE *input, FILE *output) {
     Token *instruction[MAX_LINE_LENGTH];
     // Send code to output to initialise SP.
+    // RAM[0] = 256; (SP)
     fputs("@256\n"
           "D=A\n"
           "@SP\n"
           "M=D\n", output);
     while (1) {
         // Get the next instruction.
+        // put every next line from TOKEN input(.lex) to instruction 
         int length = get_next_instruction(instruction, input);
         // If we just have an EOF, free the token and finish.
         if (length == 0) {
@@ -213,6 +215,7 @@ void parse_file(char *filename, FILE *input, FILE *output) {
             break;
         }
         // Otherwise, actually parse the instruction, free the token and repeat.
+        // parser next TOKEN line, write output (.asm)
         parse_instruction(instruction, filename, output);
         for(int i=0; i<length; i++) {
             free_token(instruction[i]);
@@ -280,7 +283,7 @@ void parse_instruction(Token *instruction[], char *filename, FILE *output) {
 
 // Append assembly code for an "add" instruction into dest.
 void parse_add(char *dest) {
-    strcat(dest, "// add\n"git@github.com:chiderlin/a_hack_assembler.git
+    strcat(dest, "// add\n"
                  "@SP\n"
                  "M=M-1\n"
                  "A=M\n"

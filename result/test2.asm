@@ -2,38 +2,389 @@
 D=A
 @SP
 M=D
-// push constant
-// push constant
+// push
+@17
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
+// push
+@17
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
 // eq
-// push constant
-// push constant
+@SP
+M=M-1
+A=M
+D=M
+@SP
+A=M-1
+D=D-M
+@auto$StackTest.vm$0
+D;JEQ
+@SP
+A=M-1
+M=0
+@auto$StackTest.vm$1
+0;JMP
+(auto$StackTest.vm$0)
+@SP
+A=M-1
+M=-1
+(auto$StackTest.vm$1)
+// push
+@17
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
+// push
+@16
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
 // eq
-// push constant
-// push constant
+@SP
+M=M-1
+A=M
+D=M
+@SP
+A=M-1
+D=D-M
+@auto$StackTest.vm$2
+D;JEQ
+@SP
+A=M-1
+M=0
+@auto$StackTest.vm$3
+0;JMP
+(auto$StackTest.vm$2)
+@SP
+A=M-1
+M=-1
+(auto$StackTest.vm$3)
+// push
+@16
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
+// push
+@17
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
 // eq
-// push constant
-// push constant
-// push constant
-// push constant
-// push constant
-// push constant
-// push constant
-// push constant
-// push constant
-// push constant
-// push constant
-// push constant
-// push constant
-// push constant
-// push constant
+@SP
+M=M-1
+A=M
+D=M
+@SP
+A=M-1
+D=D-M
+@auto$StackTest.vm$4
+D;JEQ
+@SP
+A=M-1
+M=0
+@auto$StackTest.vm$5
+0;JMP
+(auto$StackTest.vm$4)
+@SP
+A=M-1
+M=-1
+(auto$StackTest.vm$5)
+// push
+@892
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
+// push
+@891
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
+// lt
+@SP
+M=M-1
+A=M
+D=M
+@SP
+A=M-1
+D=D-M
+@auto$StackTest.vm$6
+D;JGT
+@SP
+A=M-1
+M=0
+@auto$StackTest.vm$7
+0;JMP
+(auto$StackTest.vm$6)
+@SP
+A=M-1
+M=-1
+(auto$StackTest.vm$7)
+// push
+@891
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
+// push
+@892
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
+// lt
+@SP
+M=M-1
+A=M
+D=M
+@SP
+A=M-1
+D=D-M
+@auto$StackTest.vm$8
+D;JGT
+@SP
+A=M-1
+M=0
+@auto$StackTest.vm$9
+0;JMP
+(auto$StackTest.vm$8)
+@SP
+A=M-1
+M=-1
+(auto$StackTest.vm$9)
+// push
+@891
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
+// push
+@891
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
+// lt
+@SP
+M=M-1
+A=M
+D=M
+@SP
+A=M-1
+D=D-M
+@auto$StackTest.vm$10
+D;JGT
+@SP
+A=M-1
+M=0
+@auto$StackTest.vm$11
+0;JMP
+(auto$StackTest.vm$10)
+@SP
+A=M-1
+M=-1
+(auto$StackTest.vm$11)
+// push
+@32767
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
+// push
+@32766
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
+// gt
+@SP
+M=M-1
+A=M
+D=M
+@SP
+A=M-1
+D=D-M
+@auto$StackTest.vm$12
+D;JLT
+@SP
+A=M-1
+M=0
+@auto$StackTest.vm$13
+0;JMP
+(auto$StackTest.vm$12)
+@SP
+A=M-1
+M=-1
+(auto$StackTest.vm$13)
+// push
+@32766
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
+// push
+@32767
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
+// gt
+@SP
+M=M-1
+A=M
+D=M
+@SP
+A=M-1
+D=D-M
+@auto$StackTest.vm$14
+D;JLT
+@SP
+A=M-1
+M=0
+@auto$StackTest.vm$15
+0;JMP
+(auto$StackTest.vm$14)
+@SP
+A=M-1
+M=-1
+(auto$StackTest.vm$15)
+// push
+@32766
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
+// push
+@32766
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
+// gt
+@SP
+M=M-1
+A=M
+D=M
+@SP
+A=M-1
+D=D-M
+@auto$StackTest.vm$16
+D;JLT
+@SP
+A=M-1
+M=0
+@auto$StackTest.vm$17
+0;JMP
+(auto$StackTest.vm$16)
+@SP
+A=M-1
+M=-1
+(auto$StackTest.vm$17)
+// push
+@57
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
+// push
+@31
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
+// push
+@53
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
 // add
-// push constant
+@SP
+M=M-1
+A=M
+D=M
+@SP
+A=M-1
+M=M+D
+// push
+@112
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
 // sub
+@SP
+M=M-1
+A=M
+D=M
+@SP
+A=M-1
+M=M-D
 // neg
+@SP
+A=M-1
+D=-M
+M=D
 // and
-// push constant
+@SP
+M=M-1
+A=M
+D=M
+@SP
+A=M-1
+M=M&D
+// push
+@82
+D=A
+@SP
+M=M+1
+A=M-1
+M=D
 // or
+@SP
+M=M-1
+A=M
+D=M
+@SP
+A=M-1
+M=M|D
 // not
+@SP
+A=M-1
+D=!M
+M=D
 (HaltInfiniteLoop)
 @HaltInfiniteLoop
 0;JMP
