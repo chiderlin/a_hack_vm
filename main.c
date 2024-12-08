@@ -300,6 +300,7 @@ void parse_push(char *filename, Token *segment, Token *address, char *dest) {
         exit(EXIT_FAILURE);
     }
 
+    // handle constant value: i.e. push constant 10 
     if (segment->value.key_val == CONSTANT) {
         char code[500] = "\0";
         sprintf(code, "// push\n"
@@ -311,6 +312,13 @@ void parse_push(char *filename, Token *segment, Token *address, char *dest) {
                       "M=D\n", address->value.int_val);
         strcat(dest, code);
     } else {
+        // handle others: local, argument, this, that, pointer, temp, static, constant
+        /* push local 0
+            - extract local 0 first to assembly code
+            - extract push
+
+        same for pop
+        */ 
         parse_load_data(filename, segment, address, dest);
         strcat(dest, "D=M\n"
                      "@SP\n"
@@ -326,6 +334,12 @@ void parse_pop(char *filename, Token *segment, Token *address, char *dest) {
         printf("Malformed instruction!");
         exit(EXIT_FAILURE);
     }
+    /* pop local 0
+            - extract local 0 first to assembly code
+            - extract pop
+
+        same for push
+    */ 
     parse_load_data(filename, segment, address, dest);
     strcat(dest, "D=A\n"
                  "@R13\n"
